@@ -1,22 +1,8 @@
 import React, { Component } from "react";
-import { Media } from "reactstrap";
+import { Media, Button } from "reactstrap";
 
 import InfiniteScroll from "react-infinite-scroll-component";
-
-const style = {
-  borderRadius: "5px",
-  boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-  color: "#4A4A4A",
-  border: "1px solid lightgray",
-  margin: "10px",
-  // maxHeight:"50vh"
-};
-
-const imgStyle = {
-  height: "90px",
-  width: "90px",
-  marginRight: "10px",
-};
+import "./UsersList.css";
 
 export default class UsersList extends Component {
   state = {
@@ -59,19 +45,74 @@ export default class UsersList extends Component {
       console.log("error: ", result.error);
       //   setError(result.error);
     } else {
-        // SetTimeout для наглядности загрузки
+      // SetTimeout для наглядности загрузки
       setTimeout(() => {
         this.setState((state) => {
           return { data: state.data.concat(result.data) };
         });
+        console.log("state after 2nd fetch: ", this.state);
       }, 1000);
       //   setIsLogged(true);
     }
     console.log("res from fetch", result);
-    console.log("state after 2nd fetch: ", this.state);
     //   } catch (err) {
     //     alert(err); // TODO: ERROR
   };
+
+  async onDeleteUser(id) {
+    // try {
+    let response = await fetch(`https://reqres.in/api/users/${id}`, {
+      method: "DELETE",
+    });
+    let result = await response;
+    if (result.status === 204) {
+      let filteredData = this.state.data;
+      filteredData.splice(
+        filteredData.findIndex((item) => item.id === id),
+        1
+      );
+      this.setState(() => {
+        return { data: filteredData };
+      });
+      console.log("state after delete: ", this.state);
+    }
+  }
+
+  async onEditUser(id) {
+    // try {
+    let response = await fetch(`https://reqres.in/api/users/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "Harold",
+        email: 'hidethepain@gmail.com',
+        avatar: 'https://yt3.ggpht.com/a/AATXAJwQnoYBaHCCtNgm2GUhFEVcBXJaKy2atIddqA=s900-c-k-c0xffffffff-no-rj-mo'
+      }),
+    });
+    let result = await response.json();
+    let filteredData = this.state.data;
+    let user = filteredData.find((item) => item.id === id);
+    user.first_name = "Harold";
+    user.email = 'hidethepain@gmail.com'
+    user.avatar = 'https://yt3.ggpht.com/a/AATXAJwQnoYBaHCCtNgm2GUhFEVcBXJaKy2atIddqA=s900-c-k-c0xffffffff-no-rj-mo'
+    this.setState(() => {
+      return { data: filteredData };
+    });
+    // if (result.status === 200) {
+    //   let filteredData = this.state.data;
+    //   filteredData.splice(
+    //     filteredData.findIndex((item) => item.id === id),
+    //     1
+    //   );
+    //   this.setState(() => {
+    //     return { data: filteredData };
+    //   });
+    console.log("result after edit: ", result);
+    console.log("state after delete: ", this.state);
+    // }
+  }
 
   render() {
     return (
@@ -90,15 +131,38 @@ export default class UsersList extends Component {
         >
           {this.state.data.map((item) => {
             return (
-              <Media key={item.id} style={style}>
-                <Media left href="#">
-                  <Media object src={item.avatar} style={imgStyle} alt="" />
+              <div key={item.id}>
+                <Media className="userslist-card">
+                  <Media left href="#">
+                    <Media
+                      object
+                      src={item.avatar}
+                      className="userslist-img"
+                      alt=""
+                    />
+                  </Media>
+                  <Media body>
+                    <Media heading>{item.first_name}</Media>
+                    {item.email}
+                  </Media>
+                  <div className="userslist-btn-group">
+                    <Button
+                      color="primary"
+                      size="sm"
+                      onClick={() => this.onEditUser(item.id)}
+                    >
+                      Edit
+                    </Button>{" "}
+                    <Button
+                      color="danger"
+                      size="sm"
+                      onClick={() => this.onDeleteUser(item.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
                 </Media>
-                <Media body>
-                  <Media heading>{item.first_name}</Media>
-                  {item.email}
-                </Media>
-              </Media>
+              </div>
             );
           })}
         </InfiniteScroll>

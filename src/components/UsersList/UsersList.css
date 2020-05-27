@@ -1,0 +1,29 @@
+.userslist-card {
+  border-radius: 5px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  color: #4a4a4a;
+  border: 1px solid lightgray;
+  margin: 10px;
+  padding: 5px;
+}
+
+/* .card-container {
+  display: flex;
+} */
+
+.userslist-img {
+  height: 90px;
+  width: 90px;
+  margin-right: 10px;
+}
+
+.userslist-btn-group {
+  display: flex;
+  /* flex-direction: column;
+  flex-grow: 0;
+  flex-shrink: 0; */
+}
+
+.userslist-btn-group > * {
+  margin: 2px;
+}
