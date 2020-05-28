@@ -1,45 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Alert, Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { loginSuccess } from "../../actions";
 
-const LoginForm = (props) => {
+const LoginForm = ({loginSuccess, isLogged}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
-
 
   const changeEmailHandler = (e) => {
     setEmail(e.target.value);
-    console.log(email);
   };
 
   const changePasswordHandler = (e) => {
     setPassword(e.target.value);
-    console.log(password);
   };
-
-  if (isLogged) {
-    return <Redirect to="/usersList" />;
-  }
-
-
-//   const handleLogin = () => {
-//     if (isLogged) {
-//       return <Redirect to="/usersList" />;
-//     }
-//   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("email: ", email);
-    // console.log("password: ", password);
     setError(false);
     let body = JSON.stringify({
       email,
       password,
     });
-    console.log("body:", body);
+
     try {
       let response = await fetch("https://reqres.in/api/login", {
         method: "POST",
@@ -52,20 +37,21 @@ const LoginForm = (props) => {
       let result = await response.json();
 
       if (result.error) {
-        console.log("error: ", result.error);
         setError(result.error);
       } else {
-        setIsLogged(true);
+        loginSuccess(true);
       }
-
-      console.log(result);
     } catch (err) {
-      alert(err); // TODO: ERROR
+      alert(err);
     }
   };
 
+  if (isLogged) {
+    return <Redirect to="/usersList" />;
+  }
+
   return (
-    <div>
+    <div style={{ width: "300px", margin: "20px" }}>
       <Form id="formElem" onSubmit={handleSubmit}>
         <FormGroup>
           <Label for="exampleEmail">Email</Label>
@@ -87,12 +73,12 @@ const LoginForm = (props) => {
             placeholder="Введите ваш пароль"
           />
         </FormGroup>
-        <Button type="submit">
-          Submit
-        </Button>
+        <Button type="submit">Submit</Button>
       </Form>
       {error ? (
-        <Alert color="danger">Something bad happened. Reason: {error}</Alert>
+        <Alert color="danger">
+          Something bad happened... {<br />}Reason: {error}
+        </Alert>
       ) : (
         ""
       )}
@@ -100,4 +86,16 @@ const LoginForm = (props) => {
   );
 };
 
-export default LoginForm;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginSuccess: (data) => dispatch(loginSuccess(data)),
+  };
+};
+
+const mapStateToProps = ({ isLogged }) => {
+  return {
+    isLogged,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

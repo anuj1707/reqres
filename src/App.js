@@ -1,62 +1,54 @@
-import React from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { connect } from "react-redux";
 
-import './App.css'
-import LoginForm from './components/LoginForm'
-import UsersList from './components/UsersList'
+import "./App.css";
+import LoginForm from "./components/LoginForm";
+import UsersList from "./components/UsersList";
+import AddUser from "./components/AddUser";
+import { loginSuccess } from "./actions";
 
-function App() {
+function App({ isLogged, loginSuccess }) {
   return (
     <Router>
-    <div className='App'>
-      <nav >
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/users">Users</Link>
-          </li>
-        </ul>
-      </nav>
+      <div className="App">
+        {isLogged ? (
+          <div className="header">
+            <Link to="/addUser">Add User</Link>{" "}
+            <Link to="/" onClick={loginSuccess}>
+              Log Out
+            </Link>
+          </div>
+        ) : (
+          ""
+        )}
 
-      {/* A <Switch> looks through its children <Route>s and
-          renders the first one that matches the current URL. */}
-      <Switch>
-        <Route path="/about">
-          <About />
-        </Route>
-        <Route path="/usersList">
-          <UsersList />
-        </Route>
-        <Route path="/">
-          <LoginForm />
-        </Route>
-      </Switch>
-    </div>
-  </Router>
+        <Switch>
+          <Route exact path="/">
+            <LoginForm />
+          </Route>
+          <Route path="/addUser">
+            <AddUser />
+          </Route>
+          <Route path="/usersList">
+            <UsersList />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginSuccess: () => dispatch(loginSuccess(false)),
+  };
+};
 
+const mapStateToProps = ({ isLogged }) => {
+  return {
+    isLogged,
+  };
+};
 
-// function Home() {
-//   return <h2>Home</h2>;
-// }
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
-}
+export default connect(mapStateToProps, mapDispatchToProps)(App);
