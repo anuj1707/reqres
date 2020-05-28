@@ -1,12 +1,13 @@
 .App {
-  min-width: 400px;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  margin: 10px;
+  min-width: 400px;
 }
 
 .header {
   display: flex;
-  width: 500px;
   justify-content: space-evenly;
+  width: 500px;
 }

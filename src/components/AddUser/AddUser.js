@@ -27,7 +27,7 @@ function AddUser({ data, isLogged, userAdded, addUserRequest }) {
       avatar:
         "https://yt3.ggpht.com/a/AGF-l7_ymSxOKPUYZG4H3FPiz6iWO6eVfqEs1jS5qw=s900-c-k-c0xffffffff-no-rj-mo",
     });
-    console.log("body:", body);
+
     try {
       let response = await fetch("https://reqres.in/api/users", {
         method: "POST",
@@ -40,18 +40,14 @@ function AddUser({ data, isLogged, userAdded, addUserRequest }) {
       let result = await response.json();
 
       if (result.error) {
-        console.log("error: ", result.error);
         setError(result.error);
       }
       if (result.id) {
         let filteredData = Object.assign([], data);
-        console.log("data: ", data);
         filteredData.push(result);
         addUserRequest(filteredData);
-        console.log("data after dispatch: ", data);
       }
 
-      console.log("result:", result);
     } catch (err) {
       alert(err); // TODO: ERROR
     }
@@ -63,7 +59,6 @@ function AddUser({ data, isLogged, userAdded, addUserRequest }) {
     }
   });
   if (userAdded) {
-    console.log("userAdded", userAdded);
     return <Redirect to="/usersList" />;
   }
 
@@ -91,7 +86,7 @@ function AddUser({ data, isLogged, userAdded, addUserRequest }) {
             placeholder="Введите ваш Email"
           />
         </FormGroup>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Add User</Button>
       </Form>
       {error ? (
         <Alert color="danger">

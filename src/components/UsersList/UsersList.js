@@ -5,29 +5,18 @@ import { Redirect } from "react-router-dom";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./UsersList.css";
-import {
-  fetchData,
-  hasNoMoreData,
-  loadMoreData,
-  deleteUser,
-  addUserSuccess,
-} from "../../actions";
-// import { dispatch } from "../../index";
+import * as actions from "../../actions";
 
 class UsersList extends Component {
   componentDidMount = async () => {
-    console.log(this.props.data);
     if (this.props.data.length === 0) {
       try {
         let response = await fetch("https://reqres.in/api/users?page=1");
         let result = await response.json();
-        // console.log('result', result)
         if (result.error) {
           alert(result.error);
         } else {
-          // console.log("res", result);
           this.props.fetchData(result.data);
-          console.log("store: ", this.props.data);
         }
       } catch (err) {
         alert(err);
@@ -45,18 +34,10 @@ class UsersList extends Component {
     try {
       let response = await fetch("https://reqres.in/api/users?page=2");
       let result = await response.json();
-      // console.log("result from 2nd fetch: ", result);
-
-      if (result.error) {
-        // console.log("error: ", result.error);
-        //   setError(result.error);
-      } else {
         // SetTimeout для наглядности загрузки
         setTimeout(() => {
-          this.props.loadMoreData(this.props.data.concat(result.data));
+          this.props.updateUserList(this.props.data.concat(result.data));
         }, 1000);
-      }
-      // console.log("res from fetch", result);
     } catch (err) {
       alert(err);
     }
@@ -74,7 +55,7 @@ class UsersList extends Component {
           filteredData.findIndex((item) => item.id === id),
           1
         );
-        this.props.deleteUser(filteredData);
+        this.props.updateUserList(filteredData);
       }
     } catch (err) {
       alert(err);
@@ -83,31 +64,32 @@ class UsersList extends Component {
 
   async onEditUser(id) {
     try {
+      let name = "Harold";
+      let email = "hidethepain@gmail.com";
+      let avatar =
+        "https://yt3.ggpht.com/a/AATXAJwQnoYBaHCCtNgm2GUhFEVcBXJaKy2atIddqA=s900-c-k-c0xffffffff-no-rj-mo";
       let response = await fetch(`https://reqres.in/api/users/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "Harold",
-          email: "hidethepain@gmail.com",
-          avatar:
-            "https://yt3.ggpht.com/a/AATXAJwQnoYBaHCCtNgm2GUhFEVcBXJaKy2atIddqA=s900-c-k-c0xffffffff-no-rj-mo",
+          name,
+          email,
+          avatar,
         }),
       });
       let result = await response.json();
-      let filteredData = Object.assign([], this.props.data);
-      let user = filteredData.find((item) => item.id === id);
-      user.first_name = "Harold";
-      user.email = "hidethepain@gmail.com";
-      user.avatar =
-        "https://yt3.ggpht.com/a/AATXAJwQnoYBaHCCtNgm2GUhFEVcBXJaKy2atIddqA=s900-c-k-c0xffffffff-no-rj-mo";
-
-      //TODO: объединить экшны
-      this.props.deleteUser(filteredData);
-
-      console.log("result after edit: ", result);
-      // }
+      if (result.name === name && result.email === email){
+        let filteredData = Object.assign([], this.props.data);
+        let user = filteredData.find((item) => item.id === id);
+        user.first_name = "Harold";
+        user.email = "hidethepain@gmail.com";
+        user.avatar =
+          "https://yt3.ggpht.com/a/AATXAJwQnoYBaHCCtNgm2GUhFEVcBXJaKy2atIddqA=s900-c-k-c0xffffffff-no-rj-mo";
+  
+        this.props.updateUserList(filteredData);
+      }
     } catch (err) {
       alert(err);
     }
@@ -174,16 +156,6 @@ class UsersList extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchData: (data) => dispatch(fetchData(data)),
-    hasNoMoreData: () => dispatch(hasNoMoreData()),
-    loadMoreData: (data) => dispatch(loadMoreData(data)),
-    deleteUser: (data) => dispatch(deleteUser(data)),
-    addUserSuccess: () => dispatch(addUserSuccess()),
-  };
-};
-
 const mapStateToProps = ({ data, isLogged, hasMore }) => {
   return {
     data,
@@ -192,4 +164,4 @@ const mapStateToProps = ({ data, isLogged, hasMore }) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsersList);
+export default connect(mapStateToProps, actions)(UsersList);

@@ -73,7 +73,7 @@ const LoginForm = ({loginSuccess, isLogged}) => {
             placeholder="Введите ваш пароль"
           />
         </FormGroup>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Log In</Button>
       </Form>
       {error ? (
         <Alert color="danger">

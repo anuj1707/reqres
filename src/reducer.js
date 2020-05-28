@@ -18,12 +18,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         hasMore: false,
       };
-    case "LOAD_MORE_DATA":
-      return {
-        ...state,
-        data: action.payload,
-      };
-    case "DELETE_USER":
+    case "UPDATE_USER_LIST":
       return {
         ...state,
         data: action.payload,
