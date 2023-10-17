@@ -11,3 +11,16 @@
   justify-content: space-evenly;
   width: 500px;
 }
+
+.header .btn{
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-small{
+  background-color: rgba(255, 66, 66, 0.919);
+  padding: 8px;
+  border-radius: 5px;
+  color: #fff;
+  border: none;
+}

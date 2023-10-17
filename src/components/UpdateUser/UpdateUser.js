@@ -76,7 +76,7 @@ function AddUser({ data, isLogged, userAdded, addUserRequest }) {
   return (
     <div style={{ width: "300px", margin: "20px" }}>
       <Form id="formElem" onSubmit={handleSubmit}>
-        <Label>Add User</Label>
+        <Label>Edit User</Label>
         <FormGroup>
           <Label for="exampleName">Username</Label>
           <Input
@@ -118,7 +118,7 @@ function AddUser({ data, isLogged, userAdded, addUserRequest }) {
             placeholder="password"
           />
         </FormGroup>
-        <Button type="submit">Add User</Button>
+        <Button type="submit">Edit User</Button>
       </Form>
       {error ? (
         <Alert color="danger">

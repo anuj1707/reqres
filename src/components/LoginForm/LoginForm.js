@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Alert, Button, Form, FormGroup, Label, Input } from "reactstrap";
+import '../images/acme.png'
+import '../images/hero-bg.jpg'
+import '../images/login-img.jpg'
+import '../images/logo.jpg'
+import '../images/signup-img.jpg'
+
+import './styles.css'
+import { Alert,  Form, FormGroup, Label, Input } from "reactstrap";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { loginSuccess } from "../../actions";
@@ -51,29 +58,37 @@ const LoginForm = ({loginSuccess, isLogged}) => {
   }
 
   return (
-    <div style={{ width: "300px", margin: "20px" }}>
+   <body>
+    <div class="container">
+        <div class="forms">
+            <div class="form login">
+            <h2 class="title">Login</h2>
+        
       <Form id="formElem" onSubmit={handleSubmit}>
         <FormGroup>
-          <Label for="exampleEmail">Email</Label>
+        <i class=""></i>
+                      
+          <Label for="exampleEmail" class="usernamecl">Username</Label>
           <Input
             type="email"
             name="email"
             onChange={changeEmailHandler}
             id="exampleEmail"
-            placeholder="Введите ваш Email"
+            placeholder="Username"
           />
         </FormGroup>
         <FormGroup>
-          <Label for="examplePassword">Password</Label>
+                    
+          <Label for="examplePassword" class="usernamecl">Password</Label>
           <Input
             type="password"
             name="password"
             onChange={changePasswordHandler}
             id="examplePassword"
-            placeholder="Введите ваш пароль"
+            placeholder="Password"
           />
         </FormGroup>
-        <Button type="submit">Log In</Button>
+        <button type="submit" className = 'button'>Log In</button>
       </Form>
       {error ? (
         <Alert color="danger">
@@ -82,7 +97,10 @@ const LoginForm = ({loginSuccess, isLogged}) => {
       ) : (
         ""
       )}
+      </div>
+      </div>
     </div>
+    </body>
   );
 };
 
